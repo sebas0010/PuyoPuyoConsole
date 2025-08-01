@@ -55,6 +55,7 @@ void PauseLevel::Tick(float deltaTime)
 	{
 		// 메뉴 아이템이 저장하고 있는 함수 호출
 		items[currentIndex]->onSelected();
+		currentIndex = 0;
 	}
 }
 

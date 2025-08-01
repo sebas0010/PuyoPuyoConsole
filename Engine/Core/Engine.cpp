@@ -39,9 +39,6 @@ Engine::Engine()
 
 	// 콘솔 창 이벤트 등록.
 	SetConsoleCtrlHandler(ConsoleMessageProcedure, TRUE);
-	
-	// 엔진 설정 로드.
-	LoadEngineSettings();
 
 	// 랜덤 종자값(seed) 설정.
 	srand(static_cast<unsigned int>(time(nullptr)));
@@ -144,16 +141,6 @@ Engine& Engine::Get()
 	return *instance;
 }
 
-int Engine::Width() const
-{
-	return settings.width;
-}
-
-int Engine::Height() const
-{
-	return settings.height;
-}
-
 void Engine::BeginPlay()
 {
 	if (mainLevel)
@@ -164,43 +151,15 @@ void Engine::BeginPlay()
 
 void Engine::Tick(float deltaTime)
 {
-	//std::cout 
-	//	<< "DeltaTime: " << deltaTime 
-	//	<< ", FPS: " <<  (1.0f / deltaTime)
-	//	<< "\n";
-
-	//if (GetKeyDown('A'))
-	//{
-	//	std::cout << "KeyDown\n";
-	//}
-	//if (GetKey('A'))
-	//{
-	//	std::cout << "Key\n";
-	//}
-	//if (GetKeyUp('A'))
-	//{
-	//	std::cout << "KeyUp\n";
-	//}
-
 	// 레벨 업데이트.
 	if (mainLevel)
 	{
 		mainLevel->Tick(deltaTime);
 	}
-
-	//if (GetKeyDown(VK_ESCAPE))
-	//{
-	//	Quit();
-	//}
 }
 
 void Engine::Render()
 {
-	//SetConsoleTextAttribute(
-	//	GetStdHandle(STD_OUTPUT_HANDLE),
-	//	FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED
-	//);
-
 	Utils::SetConsoleTextColor(
 		FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED
 	);
@@ -209,76 +168,4 @@ void Engine::Render()
 	{
 		mainLevel->Render();
 	}
-}
-
-void Engine::LoadEngineSettings()
-{
-	// 엔진 설정 파일 열기.
-	FILE* file = nullptr;
-	fopen_s(&file, "../Settings/EngineSettings.txt", "rt");
-	if (file == nullptr)
-	{
-		std::cout << "Failed to load engine settings.\n";
-		__debugbreak();
-		return;
-	}
-
-	// 로드.
-
-	// FP(File Position) 포인터를 가장 뒤로 옮기기.
-	fseek(file, 0, SEEK_END);
-
-	// 이 위치 구하기.
-	size_t fileSize = ftell(file);
-
-	// 다시 첫 위치로 되돌리기.
-	//fseek(file, 0, SEEK_SET);
-	rewind(file);
-
-	// 파일 내용을 저장할 버퍼 할당.
-	char* buffer = new char[fileSize + 1];
-	memset(buffer, 0, fileSize + 1);
-
-	// 내용 읽기.
-	size_t readSize = fread(buffer, sizeof(char), fileSize, file);
-
-	// 파싱(Parcing, 구문 해석->필요한 정보를 얻는 과정).
-	char* context = nullptr;
-	char* token = nullptr;
-
-	token = strtok_s(buffer, "\n", &context);
-
-	// 구문 분석.
-	while (token != nullptr)
-	{
-		// 키/값 분리.
-		char header[10] = { };
-
-		// 아래 구문이 제대로 동작하려면 키와 값 사이의 빈칸이 있어야 함.
-		sscanf_s(token, "%s", header, 10);
-
-		// 헤더 문자열 비교.
-		if (strcmp(header, "framerate") == 0)
-		{
-			sscanf_s(token, "framerate = %f", &settings.framerate);
-		}
-		else if (strcmp(header, "width") == 0)
-		{
-			sscanf_s(token, "width = %d", &settings.width);
-		}
-		else if (strcmp(header, "height") == 0)
-		{
-			sscanf_s(token, "height = %d", &settings.height);
-		}
-
-		// 그 다음줄 분리.
-		token = strtok_s(nullptr, "\n", &context);
-	}
-
-
-	// 버퍼 해제.
-	SafeDeleteArray(buffer);
-
-	// 파일 닫기.
-	fclose(file);
 }

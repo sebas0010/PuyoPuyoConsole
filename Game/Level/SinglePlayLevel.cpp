@@ -17,6 +17,6 @@ void SinglePlayLevel::Tick(float deltaTime)
 
 void SinglePlayLevel::Render()
 {
-	Utils::SetConsolePosition(Vector2::Zero);
-	std::cout << "this is single play\n";
+	super::Render();
+
 }

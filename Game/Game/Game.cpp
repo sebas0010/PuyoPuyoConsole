@@ -9,12 +9,15 @@ Game* Game::instance = nullptr;
 Game::Game()
 {
 	instance = this;
+	menuLevel = new MenuLevel();
+
 	// 게임을 시작하면 메뉴를 먼저 보여줌
-	AddLevel(menuLevel = new MenuLevel());
+	AddLevel(menuLevel);
 	pauseLevel = new PauseLevel();
 }
 Game::~Game()
 {
+	mainLevel = nullptr;
 	CleanUp();
 }
 
@@ -22,14 +25,16 @@ void Game::AddSinglePlayLevel()
 {
 	system("cls");
 	pause = false;
-	AddLevel(gameLevel = new SinglePlayLevel());
+	gameLevel = new SinglePlayLevel();
+	AddLevel(gameLevel);
 }
 
 void Game::AddMultiPlayLevel()
 {
 	system("cls");
 	pause = false;
-	AddLevel(gameLevel = new MultiPlayLevel());
+	gameLevel = new MultiPlayLevel();
+	AddLevel(gameLevel);
 }
 
 void Game::ReturnToMainMenu()
@@ -45,7 +50,6 @@ void Game::ToggleMenu()
 	// 화면 정리
 	// clear screen 명령어 실행
 	system("cls");
-
 	pause = !pause;
 
 	if (pause)
@@ -61,7 +65,7 @@ void Game::ToggleMenu()
 
 void Game::CleanUp()
 {
-	SafeDelete(mainLevel);
+	SafeDelete(pauseLevel);
 	SafeDelete(menuLevel);
 	SafeDelete(gameLevel);
 }
