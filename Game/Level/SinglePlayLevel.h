@@ -24,4 +24,6 @@ private:
 	int screenMinY = 3;
 	int screenMaxY = 26;
 
+	// 현재 뿌요가 떨어지고 있는지 여부
+	bool isPuyoLanding = false;
 };

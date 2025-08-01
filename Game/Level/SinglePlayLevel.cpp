@@ -17,8 +17,8 @@ void SinglePlayLevel::Tick(float deltaTime)
 
 void SinglePlayLevel::Render()
 {
-	super::Render();
-	DrawMap();
+    DrawMap();
+    super::Render();
 	
 }
 
