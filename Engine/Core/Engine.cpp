@@ -124,12 +124,6 @@ void Engine::Run()
 
 void Engine::AddLevel(Level* newLevel)
 {
-	// 기존에 있던 레벨은 제거.
-	if (mainLevel)
-	{
-		delete mainLevel;
-	}
-
 	mainLevel = newLevel;
 }
 
@@ -137,11 +131,6 @@ void Engine::CleanUp()
 {
 	// 레벨 삭제.
 	SafeDelete(mainLevel);
-	//if (mainLevel)
-	//{
-	//	delete mainLevel;
-	//	mainLevel = nullptr;
-	//}
 }
 
 void Engine::Quit()

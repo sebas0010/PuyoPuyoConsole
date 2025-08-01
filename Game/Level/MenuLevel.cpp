@@ -10,11 +10,11 @@ MenuLevel::MenuLevel()
 	// 메뉴 아이템 추가
 	items.emplace_back(new MenuItem(
 		"Single Play",
-		[]() {  }
+		[]() { Game::Get().AddSinglePlayLevel(); }
 	));
 	items.emplace_back(new MenuItem(
 		"1 vs 1",
-		[]() {  }
+		[]() { Game::Get().AddMultiPlayLevel(); }
 	));
 	items.emplace_back(new MenuItem(
 		"Quit Game",

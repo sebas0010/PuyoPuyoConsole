@@ -8,15 +8,15 @@
 PauseLevel::PauseLevel()
 {
 	// 메뉴 아이템 추가
-	items.emplace_back(new MenuItem(
+	items.emplace_back(new PauseItem(
 		"Resume Game",
-		[]() {}
+		[]() { Game::Get().ToggleMenu(); }
 	));
-	items.emplace_back(new MenuItem(
+	items.emplace_back(new PauseItem(
 		"Return to Main Menu",
-		[]() {  }
+		[]() { Game::Get().ReturnToMainMenu(); }
 	));
-	items.emplace_back(new MenuItem(
+	items.emplace_back(new PauseItem(
 		"Quit Game",
 		[]() { Game::Get().Quit(); }
 	));
@@ -26,7 +26,7 @@ PauseLevel::PauseLevel()
 
 PauseLevel::~PauseLevel()
 {
-	for (MenuItem* item : items)
+	for (PauseItem* item : items)
 	{
 		SafeDelete(item);
 	}

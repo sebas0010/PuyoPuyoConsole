@@ -165,12 +165,17 @@
   <ItemGroup>
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Level\MenuLevel.cpp" />
+    <ClCompile Include="Level\PauseLevel.cpp" />
+    <ClCompile Include="Level\SinglePlayLevel.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Utils\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Level\MenuLevel.h" />
+    <ClInclude Include="Level\MultiPlayLevel.h" />
+    <ClInclude Include="Level\PauseLevel.h" />
+    <ClInclude Include="Level\SinglePlayLevel.h" />
     <ClInclude Include="Utils\Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

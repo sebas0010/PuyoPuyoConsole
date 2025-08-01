@@ -3,12 +3,12 @@
 #include "Level/Level.h"
 #include "Math/Color.h"
 
-struct MenuItem
+struct PauseItem
 {
 	// 함수 포인터 선언
 	typedef void (*OnSelected)();
 
-	MenuItem(const char* text, OnSelected onSelected)
+	PauseItem(const char* text, OnSelected onSelected)
 		: onSelected(onSelected)
 	{
 		size_t length = strlen(text) + 1;
@@ -16,7 +16,7 @@ struct MenuItem
 		strcpy_s(menuText, length, text);
 	}
 
-	~MenuItem()
+	~PauseItem()
 	{
 		SafeDeleteArray(menuText);
 	}
@@ -47,7 +47,7 @@ private:
 	// 아이템 미선택 색상
 	Color unselectedColor = Color::White;
 	// 아이템 배열
-	std::vector<MenuItem*> items;
+	std::vector<PauseItem*> items;
 
 	// 메뉴 아이템 수
 	int length = 0;
