@@ -7,5 +7,9 @@ class MultiPlayLevel : public Level
 	RTTI_DECLARATIONS(MultiPlayLevel, Level)
 
 public:
+	void Tick(float deltaTime) override;
+	void Render() override;
+
 private:
+
 };

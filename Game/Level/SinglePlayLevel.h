@@ -8,9 +8,20 @@ class SinglePlayLevel : public Level
 		
 public:
 
-	virtual void Tick(float deltaTime) override;
-	virtual void Render() override;
+	void Tick(float deltaTime) override;
+	void Render() override;
+
+
 private:
 
+	void DrawMap();
+
+private:
+	
+	// 플레이어가 조작 가능한 공간의 좌표
+	int screenMinX = 6;
+	int screanMaxX = 35;
+	int screenMinY = 3;
+	int screenMaxY = 26;
 
 };
