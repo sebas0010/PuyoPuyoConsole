@@ -5,6 +5,8 @@
 #include "Actor/Puyo.h"
 #include "Utils/Utils.h"
 
+#include <queue>
+
 
 SinglePlayLevel::SinglePlayLevel()
 {
@@ -175,8 +177,6 @@ void SinglePlayLevel::PuyoLanded(Puyo* puyo1, Puyo* puyo2)
 	puyoGrid[puyo2->Position().x / 5 - 1][(25 - puyo2->Position().y) / 2] = puyo2;
 
 	Gravity();
-
-	isPuyoLanding = false;
 }
 
 void SinglePlayLevel::Gravity()
@@ -205,6 +205,68 @@ void SinglePlayLevel::Gravity()
 	}
 }
 
-void SinglePlayLevel::Explore()
+void SinglePlayLevel::Explore() // BFS 방식으로 탐색
 {
+	bool visited[6][12] = { false };
+	std::vector<Vector2> removeList;
+
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 12; j++)
+		{
+			if (!puyoGrid[i][j] || visited[i][j])
+				continue;
+
+			int targetCode = puyoGrid[i][j]->GetCode();
+			std::vector<Vector2> group;
+			std::queue<Vector2> q;
+
+			q.push({ i, j });
+			visited[i][j] = true;
+
+			while (!q.empty())
+			{
+				Vector2 cur = q.front();
+				q.pop();
+				group.push_back(cur);
+
+				static const int dx[4] = { 1, -1, 0, 0 };
+				static const int dy[4] = { 0, 0, 1, -1 };
+
+				for (int dir = 0; dir < 4; dir++)
+				{
+					int nx = cur.x + dx[dir];
+					int ny = cur.y + dy[dir];
+
+					if (nx < 0 || nx >= 6 || ny < 0 || ny >= 12) continue;
+					if (visited[nx][ny]) continue;
+					if (!puyoGrid[nx][ny]) continue;
+
+					if (puyoGrid[nx][ny]->GetCode() == targetCode)
+					{
+						visited[nx][ny] = true;
+						q.push({ nx, ny });
+					}
+				}
+			}
+
+			// 4개 이상이면 삭제 대상에 추가
+			if (group.size() >= 4)
+				removeList.insert(removeList.end(), group.begin(), group.end());
+		}
+	}
+
+	if (removeList.empty())
+	{
+		isPuyoLanding = false;
+		return;
+	}
+
+	// 삭제 실행
+	for (auto& pos : removeList)
+	{
+		puyoGrid[pos.x][pos.y]->Destroy();
+		puyoGrid[pos.x][pos.y] = nullptr;
+	}
+	Gravity();
 }
