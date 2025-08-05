@@ -5,7 +5,13 @@
 #include "Actor/Puyo.h"
 #include "Utils/Utils.h"
 
+#undef min
+#undef max
+
 #include <queue>
+#include <set>
+#include <algorithm>
+#include <string>
 
 
 SinglePlayLevel::SinglePlayLevel()
@@ -23,7 +29,7 @@ void SinglePlayLevel::Tick(float deltaTime)
 	if (isPuyoLanding == false) SpawnPuyo();
 
 	if (!isProcessing) return;
-	if (AllGravityFinished()) Explore();
+	if (AllGravityFinished()) gameScore += Explore();
 }
 
 void SinglePlayLevel::Render()
@@ -31,6 +37,10 @@ void SinglePlayLevel::Render()
 	// 맵 그리기
 	DrawMap(Vector2(screenMinX - 1, screenMinY - 1));
 	DrawNextPuyo(Vector2(screenMaxX+5, screenMinY));
+
+	std::string scoreText = std::to_string(gameScore);
+
+	Game::Get().WriteToBuffer(Vector2::Zero, scoreText.c_str(), Color::White);
 	super::Render();
 }
 
@@ -221,10 +231,12 @@ bool SinglePlayLevel::AllGravityFinished()
 	return true;
 }
 
-void SinglePlayLevel::Explore() // BFS 방식으로 탐색
+int SinglePlayLevel::Explore()
 {
 	bool visited[6][12] = { false };
 	std::vector<Vector2> removeList;
+	std::set<int> colorSet; // 색상 종류
+	std::vector<int> groupSizes; // 그룹 크기 저장
 
 	for (int i = 0; i < 6; i++)
 	{
@@ -242,8 +254,7 @@ void SinglePlayLevel::Explore() // BFS 방식으로 탐색
 
 			while (!q.empty())
 			{
-				Vector2 cur = q.front();
-				q.pop();
+				Vector2 cur = q.front(); q.pop();
 				group.push_back(cur);
 
 				static const int dx[4] = { 1, -1, 0, 0 };
@@ -266,9 +277,13 @@ void SinglePlayLevel::Explore() // BFS 방식으로 탐색
 				}
 			}
 
-			// 4개 이상이면 삭제 대상에 추가
 			if (group.size() >= 4)
+			{
+				// 그룹 정보 저장
+				colorSet.insert(targetCode);
+				groupSizes.push_back((int)group.size());
 				removeList.insert(removeList.end(), group.begin(), group.end());
+			}
 		}
 	}
 
@@ -276,14 +291,37 @@ void SinglePlayLevel::Explore() // BFS 방식으로 탐색
 	{
 		isPuyoLanding = false;
 		isProcessing = false;
-		return;
+		chainCount = 0;
+		return 0;
 	}
 
-	// 삭제 실행
+	// === 점수 계산 ===
+	int colors = (int)colorSet.size();
+	int chainB = chainBonus[std::min(chainCount - 1, 9)];
+	int colorB = colorBonus[std::min(colors - 1, 3)];
+
+	int groupB = 0;
+	for (int size : groupSizes)
+	{
+		int idx = std::min(size - 4, 5);
+		groupB += groupBonus[std::max(0, idx)];
+	}
+
+	int bonus = chainB + colorB + groupB;
+	if (bonus < 1) bonus = 1;
+
+	int totalRemoved = (int)removeList.size();
+	int score = totalRemoved * 10 * bonus;
+
+	// === 삭제 실행 ===
 	for (auto& pos : removeList)
 	{
 		puyoGrid[pos.x][pos.y]->Destroy();
 		puyoGrid[pos.x][pos.y] = nullptr;
 	}
+
 	Gravity();
+	chainCount++;
+	return score; // 이번 Explore에서 얻은 점수
 }
+

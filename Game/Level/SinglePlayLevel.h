@@ -37,7 +37,7 @@ public:
     bool AllGravityFinished();
 
 	// 뿌요 그리드를 탐색하며 같은 색 4개가 연결된 경우 터뜨리는 함수
-	void Explore();
+	int Explore();
 
 	// 플레이어가 조작 가능한 공간의 좌표
 	int screenMinX = 6;
@@ -64,4 +64,41 @@ private:
 	int nextPuyoCode2 = 0;
 	Color nextPuyoColor1 = Color::White;
 	Color nextPuyoColor2 = Color::White;
+
+	// 현재 게임 점수
+	int gameScore = 0;
+
+	// 현재 연쇄 레벨
+	int chainCount = 0;
+
+	int chainBonus[10] = {
+	0,   // 1연쇄
+	8,   // 2연쇄
+	16,  // 3연쇄
+	32,  // 4연쇄
+	64,  // 5연쇄
+	96,  // 6연쇄
+	128, // 7연쇄
+	160, // 8연쇄
+	192, // 9연쇄
+	224  // 10연쇄 이상
+	};
+
+	// 색상 보너스 테이블
+	int colorBonus[4] = {
+		0,  // 1색
+		3,  // 2색
+		6,  // 3색
+		12  // 4색
+	};
+
+	// 그룹 크기 보너스 테이블
+	int groupBonus[6] = {
+		0, // 4개
+		2, // 5개
+		3, // 6개
+		4, // 7개
+		5, // 8개
+		6  // 9개 이상 (이 이후는 필요 시 확장)
+	};
 };
