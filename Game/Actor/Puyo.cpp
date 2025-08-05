@@ -41,7 +41,7 @@ void Puyo::BeginPlay()
 			= dynamic_cast<ICanPuyoMove*>(GetOwner());
 	}
 	timer.Reset();
-	timer.SetTargetTime(0.8f);
+	timer.SetTargetTime(landingSpeed);
 }
 
 void Puyo::Tick(float deltaTime)
@@ -159,6 +159,17 @@ void Puyo::Tick(float deltaTime)
 		}
 	}
 
+	// 아래 방향키를 누르면 하강 속도 가속
+	if (Input::Get().GetKeyDown(VK_DOWN))
+	{
+		timer.SetTargetTime(landingSpeedFast);
+	}
+	// 아래 방향키를 떼면 하강 속도 복원
+	if (Input::Get().GetKeyUp(VK_DOWN))
+	{
+		timer.SetTargetTime(landingSpeed);
+	}
+
 
 	timer.Tick(deltaTime);
 
@@ -195,11 +206,16 @@ void Puyo::Render()
 	Game::Get().WriteToBuffer(curPosition, image2, color);
 }
 
-void Puyo::ApplyGravity(Vector2 newPosition)
+void Puyo::ApplyGravity(int newY)
 {
 	gravityFlag = true;
-	targetPosition = newPosition;
-	timer.SetTargetTime(0.2f);
+	targetPosition = Vector2(position.x, newY);
+	timer.SetTargetTime(landingSpeedFast);
+}
+
+int Puyo::GetCode()
+{
+	return code;
 }
 
 void Puyo::SetSibling(Puyo* sibling)

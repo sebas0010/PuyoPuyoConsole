@@ -100,5 +100,38 @@ void SinglePlayLevel::PuyoLanded(Puyo* puyo1, Puyo* puyo2)
 {
 	puyoGrid[puyo1->Position().x / 5 - 1][(25 - puyo1->Position().y) / 2] = puyo1;
 	puyoGrid[puyo2->Position().x / 5 - 1][(25 - puyo2->Position().y) / 2] = puyo2;
+
+	Gravity();
+
 	isPuyoLanding = false;
+}
+
+void SinglePlayLevel::Gravity()
+{
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 12; j++)
+		{
+			if (puyoGrid[i][j] == nullptr)
+			{
+				int k;
+				for (k = j + 1; k < 12; k++)
+				{
+					if (puyoGrid[i][k] != nullptr)
+					{
+						// 뿌요 중력 적용
+						puyoGrid[i][j] = puyoGrid[i][k];
+						puyoGrid[i][j]->ApplyGravity(25 - 2*j);
+						puyoGrid[i][k] = nullptr;
+						break;
+					}
+				}
+				if (k == 12) break;
+			}
+		}
+	}
+}
+
+void SinglePlayLevel::Explore()
+{
 }

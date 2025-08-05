@@ -15,7 +15,10 @@ public:
 	void Render() override;
 
 	// 공중에 떠 있을 때 아래로 안착
-	void ApplyGravity(Vector2 newPosition);
+	void ApplyGravity(int newY);
+
+	// 액터의 식별코드 Getter
+	int GetCode();
 
 	// 파트너 액터 Getter, Setter
 	void SetSibling(Puyo* sibling);
@@ -37,6 +40,12 @@ private:
 
 	// 액터의 색깔
 	Color color = Color::White;
+
+	// 아래 방향키를 누르고 있지 않은 경우 하강 속도 : 0.8초에 한칸
+	float landingSpeed = 0.8f;
+
+	// 아래 방향키를 누르고 있는 경우 하강 속도 : 0.1초에 한칸
+	float landingSpeedFast = 0.1f;
 
 	// Owner 레벨의 특정 함수를 사용하기 위한 인터페이스
 	class ICanPuyoMove* canPuyoMoveInterface = nullptr;
