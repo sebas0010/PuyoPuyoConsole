@@ -23,6 +23,9 @@ public:
 	// 파트너 액터 Getter, Setter
 	void SetSibling(Puyo* sibling);
 	Puyo* GetSibling() const;
+
+	// 그래비티 플래그 Getter
+	bool GetGravityFlag();
 private:
 
 	// 바닥에 착지한 뿌요인지 확인

@@ -21,6 +21,9 @@ void SinglePlayLevel::Tick(float deltaTime)
 		dynamic_cast<Game*>(&Game::Get())->Pause();
 	}
 	if (isPuyoLanding == false) SpawnPuyo();
+
+	if (!isProcessing) return;
+	if (AllGravityFinished()) Explore();
 }
 
 void SinglePlayLevel::Render()
@@ -175,7 +178,6 @@ void SinglePlayLevel::PuyoLanded(Puyo* puyo1, Puyo* puyo2)
 {
 	puyoGrid[puyo1->Position().x / 5 - 1][(25 - puyo1->Position().y) / 2] = puyo1;
 	puyoGrid[puyo2->Position().x / 5 - 1][(25 - puyo2->Position().y) / 2] = puyo2;
-
 	Gravity();
 }
 
@@ -203,6 +205,20 @@ void SinglePlayLevel::Gravity()
 			}
 		}
 	}
+	isProcessing = true;
+}
+
+bool SinglePlayLevel::AllGravityFinished()
+{
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 12; j++)
+		{
+			if (puyoGrid[i][j] && puyoGrid[i][j]->GetGravityFlag())
+				return false;
+		}
+	}
+	return true;
 }
 
 void SinglePlayLevel::Explore() // BFS 방식으로 탐색
@@ -259,6 +275,7 @@ void SinglePlayLevel::Explore() // BFS 방식으로 탐색
 	if (removeList.empty())
 	{
 		isPuyoLanding = false;
+		isProcessing = false;
 		return;
 	}
 

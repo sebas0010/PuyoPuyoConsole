@@ -227,3 +227,8 @@ Puyo* Puyo::GetSibling() const
 {
 	return sibling;
 }
+
+bool Puyo::GetGravityFlag()
+{
+	return gravityFlag;
+}

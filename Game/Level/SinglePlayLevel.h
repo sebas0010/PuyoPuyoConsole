@@ -33,6 +33,9 @@ public:
 	// 뿌요 그리드를 탐색하며 중력 적용하는 함수
 	void Gravity();
 
+	// 모든 뿌요 그리드의 중력 작용이 끝났는지 감지하는 함수
+    bool AllGravityFinished();
+
 	// 뿌요 그리드를 탐색하며 같은 색 4개가 연결된 경우 터뜨리는 함수
 	void Explore();
 
@@ -45,6 +48,9 @@ public:
 private:
 	// 뿌요를 조작 중인지 판단하기 위한 변수
 	bool isPuyoLanding = false;
+
+	// 뿌요 착륙 후를 처리중인지 판단하기 위한 변수
+	bool isProcessing = false;
 
 	// 착륙한 뿌요들을 저장하는 함수
 	Puyo* puyoGrid[6][12] = { nullptr };
