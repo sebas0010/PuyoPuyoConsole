@@ -12,6 +12,7 @@
 #include <set>
 #include <algorithm>
 #include <string>
+#include "MultiPlayLevel.h"
 
 
 SinglePlayLevel::SinglePlayLevel()
