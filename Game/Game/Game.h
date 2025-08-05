@@ -26,8 +26,18 @@ public:
 
 	// 게임으로 돌아가는 함수
 	void ResumeGame();
+
+	// 게임 오버 함수
+	void GameOver(int score);
+
+	// 게임 점수를 불러오는 함수
+	int GetPreviousScore();
 private:
 	Level* pauseLevel = nullptr;
 	Level* mainMenuLevel = nullptr;
 	Level* gameLevel = nullptr;
+	Level* gameOverLevel = nullptr;
+	
+	// 게임의 점수를 표시하기 위한 점수
+	int previousScore = 0;
 };

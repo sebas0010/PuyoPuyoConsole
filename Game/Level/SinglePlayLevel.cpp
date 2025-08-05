@@ -28,6 +28,8 @@ void SinglePlayLevel::Tick(float deltaTime)
 	}
 	if (isPuyoLanding == false) SpawnPuyo();
 
+
+
 	if (!isProcessing) return;
 	if (AllGravityFinished()) gameScore += Explore();
 }
@@ -124,6 +126,12 @@ void SinglePlayLevel::DrawNextPuyo(Vector2 drawPosition)
 
 void SinglePlayLevel::SpawnPuyo()
 {
+	if (puyoGrid[3][10] != nullptr)
+	{
+		dynamic_cast<Game*>(&Game::Get())->GameOver(gameScore);
+		return;
+	}
+	
 	Vector2 spawnPosition((screenMinX + screenMaxX)/2 + 1, screenMinY);
 
 	Puyo* puyo = new Puyo(spawnPosition, nextPuyoCode1, true);
@@ -143,7 +151,7 @@ void SinglePlayLevel::SpawnPuyo()
 bool SinglePlayLevel::CanPuyoMove(const Puyo& puyo, const Vector2& newPosition)
 {
 	// 뿌요가 내려갈 위치가 스크린을 벗어나면 못움직인다고 리턴
-	if (newPosition.y+1 > screenMaxY || newPosition.x < screenMinX || newPosition.x > screenMaxX)
+	if (newPosition.y < screenMinY || newPosition.y+1 > screenMaxY || newPosition.x < screenMinX || newPosition.x > screenMaxX)
 	{
 		return false;
 	}
@@ -324,4 +332,3 @@ int SinglePlayLevel::Explore()
 	chainCount++;
 	return score; // 이번 Explore에서 얻은 점수
 }
-

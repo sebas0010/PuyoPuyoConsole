@@ -1,15 +1,12 @@
-#include "PauseLevel.h"
+#include "GameOverLevel.h"
 #include "Game/Game.h"
 #include "Math/Vector2.h"
+#include <string>
 
-PauseLevel::PauseLevel()
+GameOverLevel::GameOverLevel()
 {
-	// 메뉴 아이템 추가 -> 게임으로 돌아가기, 메인으로 돌아가기, 게임종료
+	// 메뉴 아이템 추가 -> 싱글, 멀티, 게임 종료
 	// 메뉴 아이템 추가
-	items.emplace_back(new MenuItem(
-		"Resume Game",
-		[]() { dynamic_cast<Game*>(&Game::Get())->ResumeGame(); }
-	));
 	items.emplace_back(new MenuItem(
 		"Return to Main Menu",
 		[]() { dynamic_cast<Game*>(&Game::Get())->ReturnToMainMenu(); }
@@ -22,7 +19,7 @@ PauseLevel::PauseLevel()
 	length = static_cast<int>(items.size());
 }
 
-PauseLevel::~PauseLevel()
+GameOverLevel::~GameOverLevel()
 {
 	for (MenuItem* item : items)
 	{
@@ -32,7 +29,7 @@ PauseLevel::~PauseLevel()
 	items.clear();
 }
 
-void PauseLevel::Tick(float deltaTime)
+void GameOverLevel::Tick(float deltaTime)
 {
 	super::Tick(deltaTime);
 
@@ -57,11 +54,20 @@ void PauseLevel::Tick(float deltaTime)
 	}
 }
 
-void PauseLevel::Render()
+void GameOverLevel::Render()
 {
+	score = dynamic_cast<Game*>(&Game::Get())->GetPreviousScore();
+	std::string scoreText = std::to_string(score);
+
 	Vector2 showPosition(0, 0);
 	Color color = Color::Red;
-	Game::Get().WriteToBuffer(showPosition, "Pause", color);
+	Game::Get().WriteToBuffer(showPosition, "Game Over", color);
+
+	showPosition.y += 2;
+	Game::Get().WriteToBuffer(showPosition, "Score : ", color);
+	showPosition.x += 8;
+	Game::Get().WriteToBuffer(showPosition, scoreText.c_str(), color);
+	showPosition.x = 0;
 
 	showPosition.y += 2;
 	for (int ix = 0; ix < length; ++ix)
