@@ -3,6 +3,13 @@
 #include "Math/Vector2.h"
 #include "Math/Color.h"
 #include "Actor/Puyo.h"
+#include "Utils/Utils.h"
+
+
+SinglePlayLevel::SinglePlayLevel()
+{
+	CreateNextPuyo();
+}
 
 void SinglePlayLevel::Tick(float deltaTime)
 {
@@ -17,37 +24,103 @@ void SinglePlayLevel::Tick(float deltaTime)
 void SinglePlayLevel::Render()
 {
 	// ¸Ê ±×¸®±â
-	Vector2 position1(screenMinX - 1, screenMinY - 1);
-	Game::Get().WriteToBuffer(position1, "################################", Color::White);
-	position1.y++;
-	Vector2 position2(screenMaxX + 1, screenMinY);
+	DrawMap(Vector2(screenMinX - 1, screenMinY - 1));
+	DrawNextPuyo(Vector2(screenMaxX+5, screenMinY));
+	super::Render();
+}
+
+void SinglePlayLevel::DrawMap(Vector2 drawPosition)
+{
+	Game::Get().WriteToBuffer(drawPosition, "################################", Color::White);
+	drawPosition.y++;
+	Vector2 drawposition2(drawPosition.x + 31, drawPosition.y);
 
 	for (int ix = 0; ix < 24; ++ix)
 	{
-		Game::Get().WriteToBuffer(position1, "#", Color::White);
-		Game::Get().WriteToBuffer(position2, "#", Color::White);
-		position1.y++;
-		position2.y++;
+		Game::Get().WriteToBuffer(drawPosition, "#", Color::White);
+		Game::Get().WriteToBuffer(drawposition2, "#", Color::White);
+		drawPosition.y++;
+		drawposition2.y++;
 	}
-	Game::Get().WriteToBuffer(position1, "################################", Color::White);
+	Game::Get().WriteToBuffer(drawPosition, "################################", Color::White);
+}
 
-	super::Render();
+void SinglePlayLevel::CreateNextPuyo()
+{
+	nextPuyoCode1 = Utils::Random(1, 5);
+	switch (nextPuyoCode1)
+	{
+	case 1:
+		nextPuyoColor1 = Color::Red;
+		break;
+	case 2:
+		nextPuyoColor1 = Color::Blue;
+		break;
+	case 3:
+		nextPuyoColor1 = Color::Green;
+		break;
+	case 4:
+		nextPuyoColor1 = Color::Yellow;
+		break;
+	case 5:
+		nextPuyoColor1 = Color::Magneta;
+		break;
+	default:
+		nextPuyoColor1 = Color::White;
+		break;
+	}
+
+	nextPuyoCode2 = Utils::Random(1, 5);
+	switch (nextPuyoCode2)
+	{
+	case 1:
+		nextPuyoColor2 = Color::Red;
+		break;
+	case 2:
+		nextPuyoColor2 = Color::Blue;
+		break;
+	case 3:
+		nextPuyoColor2 = Color::Green;
+		break;
+	case 4:
+		nextPuyoColor2 = Color::Yellow;
+		break;
+	case 5:
+		nextPuyoColor2 = Color::Magneta;
+		break;
+	default:
+		nextPuyoColor2 = Color::White;
+		break;
+	}
+}
+
+void SinglePlayLevel::DrawNextPuyo(Vector2 drawPosition)
+{
+	Vector2 curPosition = drawPosition;
+	Game::Get().WriteToBuffer(curPosition, image1, nextPuyoColor1);
+	curPosition.y++;
+	Game::Get().WriteToBuffer(curPosition, image2, nextPuyoColor1);
+
+	curPosition.y++;
+	Game::Get().WriteToBuffer(curPosition, image1, nextPuyoColor2);
+	curPosition.y++;
+	Game::Get().WriteToBuffer(curPosition, image2, nextPuyoColor2);
 }
 
 void SinglePlayLevel::SpawnPuyo()
 {
 	Vector2 spawnPosition((screenMinX + screenMaxX)/2 + 1, screenMinY);
-	int code = 1;
 
-	Puyo* puyo = new Puyo(spawnPosition, code, true);
+	Puyo* puyo = new Puyo(spawnPosition, nextPuyoCode1, true);
 	spawnPosition.y += 2;
-	code = 3;
-	Puyo* puyo2 = new Puyo(spawnPosition, code, false);
+	Puyo* puyo2 = new Puyo(spawnPosition, nextPuyoCode2, false);
 
 	puyo->SetSibling(puyo2);
 	puyo2->SetSibling(puyo);
 	AddActor(puyo);
 	AddActor(puyo2);
+
+	CreateNextPuyo();
 
 	isPuyoLanding = true;
 }
