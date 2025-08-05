@@ -52,6 +52,12 @@ private:
 	// 뿌요 착륙 후를 처리중인지 판단하기 위한 변수
 	bool isProcessing = false;
 
+	// 뿌요 제거 이펙트 딜레이 함수
+	bool isRemoving = false;
+
+	// 뿌요 제거 이펙트 딜레이 타이머
+	Timer removingTimer;
+
 	// 착륙한 뿌요들을 저장하는 함수
 	Puyo* puyoGrid[6][12] = { nullptr };
 

@@ -26,9 +26,18 @@ void SinglePlayLevel::Tick(float deltaTime)
 	{
 		dynamic_cast<Game*>(&Game::Get())->Pause();
 	}
-	if (isPuyoLanding == false) SpawnPuyo();
+	if (isPuyoLanding == false && !isRemoving) SpawnPuyo();
 
-
+	if (isRemoving)
+	{
+		removingTimer.Tick(deltaTime);
+		if (removingTimer.IsTimeout())
+		{
+			isRemoving = false;
+			Gravity();
+		}
+		return;
+	}
 
 	if (!isProcessing) return;
 	if (AllGravityFinished()) gameScore += Explore();
@@ -294,7 +303,6 @@ int SinglePlayLevel::Explore()
 			}
 		}
 	}
-
 	if (removeList.empty())
 	{
 		isPuyoLanding = false;
@@ -324,11 +332,15 @@ int SinglePlayLevel::Explore()
 	// === 삭제 실행 ===
 	for (auto& pos : removeList)
 	{
-		puyoGrid[pos.x][pos.y]->Destroy();
+		puyoGrid[pos.x][pos.y]->WillDestroyed();
 		puyoGrid[pos.x][pos.y] = nullptr;
 	}
 
-	Gravity();
+	isRemoving = true;
+	removingTimer.Reset();
+	removingTimer.SetTargetTime(0.3f);
+
+
 	chainCount++;
 	return score; // 이번 Explore에서 얻은 점수
 }

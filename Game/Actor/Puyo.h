@@ -26,6 +26,9 @@ public:
 
 	// 그래비티 플래그 Getter
 	bool GetGravityFlag();
+
+	// 삭제 함수
+	void WillDestroyed();
 private:
 
 	// 바닥에 착지한 뿌요인지 확인
@@ -37,6 +40,19 @@ private:
 	// 액터의 이미지
 	const char* image1 = "(o_o)";
 	const char* image2 = "(_^_)";
+
+	// 삭제 중인 액터의 이미지
+	const char* removingImage1 = "($_$)";
+	const char* removingImage2 = "(_^_)";
+
+	// 삭제 될 액터임을 표시하는 변수
+	bool isDestroying = false;
+
+	// 삭제 이펙트 카운트
+	int effectCount = 0;
+
+	// 삭제 이펙스 색깔 코드
+	int effectCode = 0;
 
 	// 액터의 식별코드. 1 : 빨강, 2 : 파랑, 3 : 초록, 4 : 노랑, 5 : 보라
 	int code = 0;

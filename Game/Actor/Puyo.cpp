@@ -7,7 +7,7 @@ Puyo::Puyo(Vector2 spawnPosition, int code, bool isMain)
 	: code(code), isMain(isMain)
 {
 	position = spawnPosition;
-
+	effectCode = code;
 	switch (code)
 	{
 	case 1:
@@ -46,6 +46,37 @@ void Puyo::BeginPlay()
 
 void Puyo::Tick(float deltaTime)
 {
+	// 삭제될 액터일 때 삭제 이펙트
+	if (isDestroying)
+	{
+		if (effectCount >= 20) Destroy();
+		effectCode++;
+		switch (effectCode)
+		{
+		case 1:
+			color = Color::Red;
+			break;
+		case 2:
+			color = Color::Blue;
+			break;
+		case 3:
+			color = Color::Green;
+			break;
+		case 4:
+			color = Color::Yellow;
+			break;
+		case 5:
+			color = Color::Magneta;
+			break;
+		default:
+			color = Color::White;
+			effectCode = 0;
+			break;
+		}
+		effectCount++;
+		return;
+	}
+	
 	// 조작하고 있지 않은 뿌요일 경우 레벨의 중력작용 명령에 따라 행동
 	if (!isControlling)
 	{
@@ -201,9 +232,11 @@ void Puyo::Tick(float deltaTime)
 void Puyo::Render()
 {
 	Vector2 curPosition = position;
-	Game::Get().WriteToBuffer(curPosition, image1, color);
+	if(isDestroying) Game::Get().WriteToBuffer(curPosition, removingImage1, color);
+	else Game::Get().WriteToBuffer(curPosition, image1, color);
 	curPosition.y++;
-	Game::Get().WriteToBuffer(curPosition, image2, color);
+	if (isDestroying) Game::Get().WriteToBuffer(curPosition, removingImage2, color);
+	else Game::Get().WriteToBuffer(curPosition, image2, color);
 }
 
 void Puyo::ApplyGravity(int newY)
@@ -231,4 +264,9 @@ Puyo* Puyo::GetSibling() const
 bool Puyo::GetGravityFlag()
 {
 	return gravityFlag;
+}
+
+void Puyo::WillDestroyed()
+{
+	isDestroying = true;
 }
