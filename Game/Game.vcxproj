@@ -163,10 +163,12 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Actor\MultiPlayPuyo.cpp" />
     <ClCompile Include="Actor\Puyo.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Level\GameOverLevel.cpp" />
     <ClCompile Include="Level\MainMenuLevel.cpp" />
+    <ClCompile Include="Level\MultiGameOverLevel.cpp" />
     <ClCompile Include="Level\MultiPlayLevel.cpp" />
     <ClCompile Include="Level\PauseLevel.cpp" />
     <ClCompile Include="Level\SinglePlayLevel.cpp" />
@@ -174,12 +176,15 @@
     <ClCompile Include="Utils\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actor\MultiPlayPuyo.h" />
     <ClInclude Include="Actor\Puyo.h" />
     <ClInclude Include="Common\MenuItem.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Interface\ICanPuyoMove.h" />
+    <ClInclude Include="Interface\IInteractPuyo.h" />
     <ClInclude Include="Level\GameOverLevel.h" />
     <ClInclude Include="Level\MainMenuLevel.h" />
+    <ClInclude Include="Level\MultiGameOverLevel.h" />
     <ClInclude Include="Level\MultiPlayLevel.h" />
     <ClInclude Include="Level\PauseLevel.h" />
     <ClInclude Include="Level\SinglePlayLevel.h" />

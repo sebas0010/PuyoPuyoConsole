@@ -32,11 +32,15 @@ public:
 
 	// 게임 점수를 불러오는 함수
 	int GetPreviousScore();
+
+	// 멀티플레이 게임 오버 함수
+	void MultiGameOver(int loser);
 private:
 	Level* pauseLevel = nullptr;
 	Level* mainMenuLevel = nullptr;
 	Level* gameLevel = nullptr;
 	Level* gameOverLevel = nullptr;
+	Level* multiGameOverLevel = nullptr;
 	
 	// 게임의 점수를 표시하기 위한 점수
 	int previousScore = 0;

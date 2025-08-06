@@ -204,7 +204,7 @@ void Puyo::Tick(float deltaTime)
 
 	timer.Tick(deltaTime);
 
-	// 아직 착륙하지 않았기에 하강
+	// 타이머에 맞춰서 하강
 	if (!timer.IsTimeout())
 	{
 		return;
@@ -216,6 +216,7 @@ void Puyo::Tick(float deltaTime)
 	{
 		SetPosition(Vector2(position.x, position.y + 1));
 		sibling->SetPosition(Vector2(sibling->position.x, sibling->position.y + 1));
+		isLanded = false;
 	}
 	else
 	{

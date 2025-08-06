@@ -3,7 +3,7 @@
 #include "Math/Vector2.h"
 #include "Actor/Puyo.h"
 
-// 뿌요가 아래로 이동할 수 있는지 확인할 때 사용할 인터페이스.
+// 뿌요가 이동할 수 있는지 확인할 때 사용할 인터페이스.
 class ICanPuyoMove
 {
 public:

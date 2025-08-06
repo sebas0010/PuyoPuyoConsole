@@ -4,6 +4,7 @@
 #include "Level/SinglePlayLevel.h"
 #include "Level/PauseLevel.h"
 #include "Level/GameOverLevel.h"
+#include "Level/MultiGameOverLevel.h"
 
 Game::Game()
 {
@@ -31,7 +32,9 @@ void Game::ReturnToMainMenu()
 {
 	mainLevel = mainMenuLevel;
 	SafeDelete(gameLevel);
+	SafeDelete(multiGameOverLevel);
 	gameLevel = nullptr;
+	multiGameOverLevel = nullptr;
 }
 
 void Game::Pause()
@@ -65,4 +68,10 @@ void Game::GameOver(int score)
 int Game::GetPreviousScore()
 {
 	return previousScore;
+}
+
+void Game::MultiGameOver(int loser)
+{
+	multiGameOverLevel = new MultiGameOverLevel(loser);
+	mainLevel = multiGameOverLevel;
 }

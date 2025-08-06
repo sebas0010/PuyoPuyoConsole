@@ -34,7 +34,7 @@ private:
 	// 바닥에 착지한 뿌요인지 확인
 	bool isLanded = false;
 
-	// 조작 가능한 뿌요인지 확인
+	// 조작 중인 뿌요인지 확인
 	bool isControlling = true;
 
 	// 액터의 이미지

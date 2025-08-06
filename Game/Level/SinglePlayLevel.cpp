@@ -62,6 +62,9 @@ void SinglePlayLevel::DrawMap(Vector2 drawPosition)
 	drawPosition.y++;
 	Vector2 drawposition2(drawPosition.x + 31, drawPosition.y);
 
+	Vector2 endLine(drawPosition.x + 1, drawPosition.y + 3);
+	Game::Get().WriteToBuffer(endLine, "                               ", Color::BackGroundRedIntensity);
+
 	for (int ix = 0; ix < 24; ++ix)
 	{
 		Game::Get().WriteToBuffer(drawPosition, "#", Color::White);
@@ -136,11 +139,6 @@ void SinglePlayLevel::DrawNextPuyo(Vector2 drawPosition)
 
 void SinglePlayLevel::SpawnPuyo()
 {
-	if (puyoGrid[3][10] != nullptr)
-	{
-		dynamic_cast<Game*>(&Game::Get())->GameOver(gameScore);
-		return;
-	}
 	
 	Vector2 spawnPosition((screenMinX + screenMaxX)/2 + 1, screenMinY);
 
@@ -204,6 +202,11 @@ bool SinglePlayLevel::CanPuyoMove(const Puyo& puyo, const Vector2& newPosition)
 
 void SinglePlayLevel::PuyoLanded(Puyo* puyo1, Puyo* puyo2)
 {
+	if (puyo1->Position().y <= screenMinY + 3 || puyo2->Position().y <= screenMinY + 3)
+	{
+		dynamic_cast<Game*>(&Game::Get())->GameOver(gameScore);
+		return;
+	}
 	puyoGrid[puyo1->Position().x / 5 - 1][(25 - puyo1->Position().y) / 2] = puyo1;
 	puyoGrid[puyo2->Position().x / 5 - 1][(25 - puyo2->Position().y) / 2] = puyo2;
 	Gravity();

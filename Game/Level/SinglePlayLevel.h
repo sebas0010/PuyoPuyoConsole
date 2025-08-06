@@ -21,7 +21,7 @@ public:
 	// 다음 조작될 뿌요를 그리는 함수
 	void DrawNextPuyo(Vector2 drawPosition);
 
-	// 뿌요 스폰 함수
+	// 뿌요 쌍 스폰 함수
 	void SpawnPuyo();
 
 	// 새로운 위치로 뿌요가 이동 가능한지 확인하는 함수 
