@@ -11,6 +11,15 @@ MultiPlayPuyo::MultiPlayPuyo(Vector2 spawnPosition, int code, bool isMain, int p
 	position = spawnPosition;
 	color = CodeToColor(code);
 
+	// 더미 뿌요일 경우
+	if (code == 0)
+	{
+		isControlling = false;
+		isLanding = false;
+		landingSpeed = 0.05f;
+		landingSpeedFast = 0.05f;
+	}
+
 	switch (player)
 	{
 	case 0:
@@ -38,11 +47,12 @@ void MultiPlayPuyo::BeginPlay()
 	{
 		ownerInterface
 			= dynamic_cast<IInteractPuyo*>(GetOwner());
+		screenMinY = ownerInterface->GetScreenMinY(player);
 	}
-
 	// 타이머 설정, 하강 속도 설정
 	timer.Reset();
 	timer.SetTargetTime(landingSpeed);
+
 }
 
 void MultiPlayPuyo::Tick(float deltaTime)
@@ -171,14 +181,6 @@ void MultiPlayPuyo::Tick(float deltaTime)
 			break;
 		}
 	}
-
-
-
-
-
-
-
-
 	// 아래 방향키를 누르면 하강 속도 가속
 	if (Input::Get().GetKeyDown(downButton))
 	{
@@ -221,9 +223,9 @@ void MultiPlayPuyo::Tick(float deltaTime)
 void MultiPlayPuyo::Render()
 {
 	Vector2 curPosition = position;
-	Game::Get().WriteToBuffer(curPosition, image1, color);
+	if(curPosition.y >= screenMinY) Game::Get().WriteToBuffer(curPosition, image1, color);
 	curPosition.y++;
-	Game::Get().WriteToBuffer(curPosition, image2, color);
+	if (curPosition.y >= screenMinY) Game::Get().WriteToBuffer(curPosition, image2, color);
 }
 
 void MultiPlayPuyo::ApplyGravity(int newY)

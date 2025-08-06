@@ -27,6 +27,33 @@ void MultiPlayLevel::Tick(float deltaTime)
 	{
 		if (isPuyoLanding[ix] == false)
 		{
+			// 방해뿌요 처리 중이면
+			if (isDisturbProcessing[ix])
+			{
+				disturbTimer[ix].Tick(deltaTime);
+				if (disturbTimer[ix].IsTimeout())
+				{
+					// 대기 후 다음 뿌요 스폰
+					isDisturbProcessing[ix] = false;
+					SpawnPuyo(ix);
+				}
+				continue;
+			}
+
+			// 방해뿌요 생성 조건
+			int disturbCount = attackDamage[(ix + 1) % 2] / 70;
+			if (disturbCount > 0)
+			{
+				// 방해뿌요 생성
+				SpawnDisturbPuyo(ix, disturbCount);
+				attackDamage[(ix + 1) % 2] %= 70; // 방해 점수 정산
+				// 타이머 시작
+				disturbTimer[ix].Reset();
+				disturbTimer[ix].SetTargetTime(1.0f);
+				isDisturbProcessing[ix] = true;
+				continue;
+			}
+			
 			SpawnPuyo(ix);
 			continue;
 		}
@@ -146,9 +173,48 @@ void MultiPlayLevel::DrawDisturbGauge(Vector2 drawPosition, int player)
 	}
 }
 
+void MultiPlayLevel::SpawnDisturbPuyo(int player, int disturbPuyoCount)
+{
+	Vector2 spawnPosition(screenMinX[player], screenMinY[player] - 2);
+	std::vector<MultiPlayPuyo*> newDumy;
+	while (disturbPuyoCount > 0)
+	{
+		newDumy.emplace_back(new MultiPlayPuyo(spawnPosition, 0, false, player));
+		AddActor(newDumy.back());
+		spawnPosition.x += 5;
+		if (spawnPosition.x > screenMaxX[player])
+		{
+			spawnPosition.x = screenMinX[player];
+			spawnPosition.y -= 2;
+		}
+		disturbPuyoCount--;
+	}
+	int tmp = 0;
+	while (!newDumy.empty())
+	{
+		for (int i = 0; i < 12; i++) {
+			if (puyoGrid[player][tmp][i] == nullptr)
+			{
+				puyoGrid[player][tmp][i] = newDumy.front();
+				puyoGrid[player][tmp][i]->ApplyGravity(screenMaxY[player] - 2 * i - 1);
+				newDumy.erase(newDumy.begin());
+				break;
+			}
+		}
+		tmp++;
+		if (tmp > 5) tmp = 0;
+	}
+}
+
 void MultiPlayLevel::SpawnPuyo(int player)
 {
-	Vector2 spawnPosition((screenMinX[player] + screenMaxX[player]) / 2 + 1, screenMinY[player]);
+	if (gameOver != -1)
+	{
+		dynamic_cast<Game*>(&Game::Get())->MultiGameOver(gameOver);
+		return;
+	}
+
+	Vector2 spawnPosition((screenMinX[player] + screenMaxX[player]) / 2 + 1, screenMinY[player] - 2);
 
 	MultiPlayPuyo* puyo = new MultiPlayPuyo(spawnPosition, nextPuyoCode[player][0], true, player);
 	spawnPosition.y += 2;
@@ -169,8 +235,7 @@ bool MultiPlayLevel::CanPuyoMove(MultiPlayPuyo* puyo, Vector2 newPosition)
 	int player = puyo->GetPlayer();
 
 	// 뿌요가 움직일 위치가 스크린을 벗어나면 못움직인다고 리턴
-	if (newPosition.y < screenMinY[player]
-		|| newPosition.y + 1 > screenMaxY[player]
+	if (newPosition.y + 1 > screenMaxY[player]
 		|| newPosition.x < screenMinX[player]
 		|| newPosition.x > screenMaxX[player])
 	{
@@ -218,15 +283,15 @@ bool MultiPlayLevel::CanPuyoMove(MultiPlayPuyo* puyo, Vector2 newPosition)
 void MultiPlayLevel::PuyoLanded(MultiPlayPuyo* puyo1, MultiPlayPuyo* puyo2)
 {
 	int player = puyo1->GetPlayer();
-	if (puyo1->Position().y <= screenMinY[player] + 3 || puyo2->Position().y <= screenMinY[player] + 3)
-	{
-		dynamic_cast<Game*>(&Game::Get())->MultiGameOver(player);
-		return;
-	}
 	puyoGrid[player][(puyo1->Position().x - screenMinX[player]) / 5][(screenMaxY[player] - 1 - puyo1->Position().y) / 2] = puyo1;
 	puyoGrid[player][(puyo2->Position().x - screenMinX[player]) / 5][(screenMaxY[player] - 1 - puyo2->Position().y) / 2] = puyo2;
 
 	Gravity(player);
+}
+
+int MultiPlayLevel::GetScreenMinY(int player)
+{
+	return screenMinY[player];
 }
 
 void MultiPlayLevel::Gravity(int player)
@@ -238,7 +303,7 @@ void MultiPlayLevel::Gravity(int player)
 			if (puyoGrid[player][i][j] == nullptr)
 			{
 				int k;
-				for (k = j + 1; k < 12; k++)
+				for (k = j + 1; k < 24; k++)
 				{
 					if (puyoGrid[player][i][k] != nullptr)
 					{
@@ -254,6 +319,11 @@ void MultiPlayLevel::Gravity(int player)
 		}
 	}
 	isGravityProcessing[player] = true;
+	gameOver = -1;
+	for (int i = 0; i < 6; i++)
+	{
+		if (puyoGrid[player][i][11] != nullptr) gameOver = player;
+	}
 }
 
 bool MultiPlayLevel::AllGravityFinished(int player)
@@ -284,6 +354,11 @@ int MultiPlayLevel::Explore(int player)
 				continue;
 
 			int targetCode = puyoGrid[player][i][j]->GetCode();
+
+			// 방해뿌요 제외
+			if (targetCode == 0)
+				continue;
+
 			std::vector<Vector2> group;
 			std::queue<Vector2> q;
 

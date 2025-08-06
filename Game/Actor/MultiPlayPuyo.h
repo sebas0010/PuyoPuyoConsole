@@ -111,4 +111,6 @@ private:
 	// 서브뿌요의 위치관계를 나타내는 변수 0 : 아래, 1 : 왼쪽, 2 : 위, 3 : 오른쪽
 	int subPuyoDirection = 0;
 
+	// 스크린의 가장 높은 위치 좌표
+	int screenMinY = 0;
 };

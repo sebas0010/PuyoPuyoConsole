@@ -24,6 +24,9 @@ public:
 	// 예약된 방해 뿌요 개수를 그리는 함수
 	void DrawDisturbGauge(Vector2 drawPosition, int player);
 
+	// 방해 뿌요 스폰 함수
+	void SpawnDisturbPuyo(int player, int disturbPuyoCount);
+
 	// 뿌요 쌍 스폰 함수
 	void SpawnPuyo(int player);
 
@@ -32,6 +35,9 @@ public:
 
 	// 뿌요가 착륙한 후에 Grid에 추가하는 함수
 	void PuyoLanded(MultiPlayPuyo* puyo1, MultiPlayPuyo* puyo2) override;
+
+	// 뿌요에게 스크린의 가장 위 좌표를 알려주는 함수
+	int GetScreenMinY(int player) override;
 
 	// 중력 작용 함수
 	void Gravity(int player);
@@ -61,7 +67,7 @@ private:
 	Color nextPuyoColor[2][2] = {Color::White};
 
 	// 착륙한 뿌요들을 저장하는 함수
-	MultiPlayPuyo* puyoGrid[2][6][12] = { nullptr };
+	MultiPlayPuyo* puyoGrid[2][6][24] = { nullptr };
 
 	// 중력이 작용중임을 나타내는 변수
 	bool isGravityProcessing[2] = { false };
@@ -74,6 +80,15 @@ private:
 
 	// 상대에게 공격하는 대미지
 	int attackDamage[2] = { 0 };
+
+	// 방해 뿌요 생성 단계
+	bool isDisturbProcessing[2] = { false };
+	
+	// 방해 뿌요 처리 대기시간
+	Timer disturbTimer[2];;
+
+	// 게임 오버 플래그
+	int gameOver = -1;
 
 	// 현재 연쇄 레벨
 	int chainCount[2] = { 0 };
