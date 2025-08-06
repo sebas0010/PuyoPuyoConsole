@@ -20,7 +20,10 @@ public:
 
 	// 다음 조작될 뿌요를 그리는 함수
 	void DrawNextPuyo(Vector2 drawPosition, int player);
-	
+
+	// 예약된 방해 뿌요 개수를 그리는 함수
+	void DrawDisturbGauge(Vector2 drawPosition, int player);
+
 	// 뿌요 쌍 스폰 함수
 	void SpawnPuyo(int player);
 

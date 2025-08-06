@@ -17,11 +17,15 @@ MultiPlayPuyo::MultiPlayPuyo(Vector2 spawnPosition, int code, bool isMain, int p
 		leftButton = 'A';
 		rightButton = 'D';
 		downButton = 'S';
+		clockWise = 'Q';
+		counterClockWise = 'E';
 		break;
 	case 1:
 		leftButton = VK_LEFT;
 		rightButton = VK_RIGHT;
 		downButton = VK_DOWN;
+		clockWise = 'K';
+		counterClockWise = 'L';
 		break;
 	}
 }
@@ -99,6 +103,81 @@ void MultiPlayPuyo::Tick(float deltaTime)
 			}
 		}
 	}
+	else if (Input::Get().GetKeyDown(counterClockWise))
+	{
+		switch (subPuyoDirection)
+		{
+		case 0: // 서브 뿌요를 메인 뿌요의 오른쪽으로 이동
+			if (sibling->ownerInterface->CanPuyoMove(sibling, Vector2(position.x + 5, position.y)))
+			{
+				sibling->SetPosition(Vector2(position.x + 5, position.y));
+				subPuyoDirection = 3;
+			}
+			break;
+		case 1: // 서브 뿌요를 메인 뿌요의 아래로 이동
+			if (sibling->ownerInterface->CanPuyoMove(sibling, Vector2(position.x, position.y + 2)))
+			{
+				sibling->SetPosition(Vector2(position.x, position.y + 2));
+				subPuyoDirection = 0;
+			}
+			break;
+		case 2: // 서브 뿌요를 메인 뿌요의 왼쪽으로 이동
+			if (sibling->ownerInterface->CanPuyoMove(sibling, Vector2(position.x - 5, position.y)))
+			{
+				sibling->SetPosition(Vector2(position.x - 5, position.y));
+				subPuyoDirection = 1;
+			}
+			break;
+		case 3: // 서브 뿌요를 메인 뿌요의 위로 이동
+			if (sibling->ownerInterface->CanPuyoMove(sibling, Vector2(position.x, position.y - 2)))
+			{
+				sibling->SetPosition(Vector2(position.x, position.y - 2));
+				subPuyoDirection = 2;
+			}
+			break;
+		}
+	}
+	else if (Input::Get().GetKeyDown(clockWise))
+	{
+		switch (subPuyoDirection)
+		{
+		case 0: // 서브 뿌요를 메인 뿌요의 왼쪽으로 이동
+			if (sibling->ownerInterface->CanPuyoMove(sibling, Vector2(position.x - 5, position.y)))
+			{
+				sibling->SetPosition(Vector2(position.x - 5, position.y));
+				subPuyoDirection = 1;
+			}
+			break;
+		case 1: // 서브 뿌요를 메인 뿌요의 위로 이동
+			if (sibling->ownerInterface->CanPuyoMove(sibling, Vector2(position.x, position.y - 2)))
+			{
+				sibling->SetPosition(Vector2(position.x, position.y - 2));
+				subPuyoDirection = 2;
+			}
+			break;
+		case 2: // 서브 뿌요를 메인 뿌요의 오른쪽으로 이동
+			if (sibling->ownerInterface->CanPuyoMove(sibling, Vector2(position.x + 5, position.y)))
+			{
+				sibling->SetPosition(Vector2(position.x + 5, position.y));
+				subPuyoDirection = 3;
+			}
+			break;
+		case 3: // 서브 뿌요를 메인 뿌요의 아래로 이동
+			if (sibling->ownerInterface->CanPuyoMove(sibling, Vector2(position.x, position.y + 2)))
+			{
+				sibling->SetPosition(Vector2(position.x, position.y + 2));
+				subPuyoDirection = 0;
+			}
+			break;
+		}
+	}
+
+
+
+
+
+
+
 
 	// 아래 방향키를 누르면 하강 속도 가속
 	if (Input::Get().GetKeyDown(downButton))

@@ -25,8 +25,11 @@ void MultiPlayLevel::Tick(float deltaTime)
 
 	for (int ix = 0; ix < 2; ++ix)
 	{
-		if (isPuyoLanding[ix] == false)	SpawnPuyo(ix);
-
+		if (isPuyoLanding[ix] == false)
+		{
+			SpawnPuyo(ix);
+			continue;
+		}
 		// 삭제 진행중
 		if (isRemoving[ix])
 		{
@@ -39,13 +42,17 @@ void MultiPlayLevel::Tick(float deltaTime)
 			continue;
 		}
 
-
 		// 중력 작용 중 신호가 들어옴
 		if (!isGravityProcessing[ix]) continue;
 		if(AllGravityFinished(ix))
 		{
 			isGravityProcessing[ix] = false;
 			attackDamage[ix] += Explore(ix);
+			// 상쇄로 인한 점수로 상대에게 방해뿌요 생성
+			int opponent = (ix + 1) % 2;
+			int tmp = std::min(attackDamage[ix], attackDamage[opponent]);
+			attackDamage[ix] -= tmp;
+			attackDamage[opponent] -= tmp;
 		}
 	}
 }
@@ -58,6 +65,9 @@ void MultiPlayLevel::Render()
 
 	DrawNextPuyo(Vector2(screenMaxX[0] + 4, screenMinY[0]), 0);
 	DrawNextPuyo(Vector2(screenMinX[1] - 10, screenMinY[1]), 1);
+
+	DrawDisturbGauge(Vector2(screenMinX[0], screenMinY[0] - 4), 0);
+	DrawDisturbGauge(Vector2(screenMinX[1], screenMinY[1] - 4), 1);
 	super::Render();
 }
 
@@ -118,6 +128,22 @@ void MultiPlayLevel::DrawNextPuyo(Vector2 drawPosition, int player)
 	Game::Get().WriteToBuffer(drawPosition, puyoImage1, nextPuyoColor[player][1]);
 	drawPosition.y++;
 	Game::Get().WriteToBuffer(drawPosition, puyoImage2, nextPuyoColor[player][1]);
+}
+
+void MultiPlayLevel::DrawDisturbGauge(Vector2 drawPosition, int player)
+{
+	int opponent = (player + 1) % 2;
+	int damage = attackDamage[opponent];
+
+	Game::Get().WriteToBuffer(drawPosition, "Disturb Gauge", Color::White);
+	drawPosition.y++;
+
+	while (damage >= 70)
+	{
+		Game::Get().WriteToBuffer(drawPosition, "@@", Color::Yellow);
+		drawPosition.x += 2;
+		damage -= 70;
+	}
 }
 
 void MultiPlayLevel::SpawnPuyo(int player)

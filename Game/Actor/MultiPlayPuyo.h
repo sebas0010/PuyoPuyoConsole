@@ -51,6 +51,12 @@ private:
 
 	// 아래 조작 버튼
 	int downButton = 0;
+
+	// 시계방향 회전 버튼
+	int clockWise = 0;
+
+	// 반시계방향 회전 버튼
+	int counterClockWise = 0;
 	
 	// 조작 중인 뿌요인지 확인
 	bool isControlling = true;
@@ -76,7 +82,7 @@ private:
 	// 삭제 이펙스 색깔 코드
 	int effectCode = 0;
 
-	// 액터의 식별코드. 1 : 빨강, 2 : 파랑, 3 : 초록, 4 : 노랑, 5 : 보라
+	// 액터의 식별코드. 1 : 빨강, 2 : 파랑, 3 : 초록, 4 : 노랑, 5 : 보라, 0 : 방해뿌요
 	int code = 0;
 
 	// 액터의 색깔
