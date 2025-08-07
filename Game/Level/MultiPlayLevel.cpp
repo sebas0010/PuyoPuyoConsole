@@ -27,6 +27,8 @@ void MultiPlayLevel::Tick(float deltaTime)
 	{
 		if (isPuyoLanding[ix] == false)
 		{
+			attackDamage[ix] += curAttackDamage[ix];
+			curAttackDamage[ix] = 0;
 			// 방해뿌요 처리 중
 			if (isDisturbProcessing[ix])
 			{
@@ -212,8 +214,6 @@ void MultiPlayLevel::SpawnPuyo(int player)
 		dynamic_cast<Game*>(&Game::Get())->MultiGameOver(gameOver);
 		return;
 	}
-	attackDamage[player] += curAttackDamage[player];
-	curAttackDamage[player] = 0;
 
 	Vector2 spawnPosition((screenMinX[player] + screenMaxX[player]) / 2 + 1, screenMinY[player] - 4);
 

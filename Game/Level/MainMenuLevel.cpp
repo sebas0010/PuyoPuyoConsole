@@ -71,4 +71,17 @@ void MainMenuLevel::Render()
 		Game::Get().WriteToBuffer(showPosition, items[ix]->menuText, color);
 		showPosition.y++;
 	}
+
+	showPosition.y += 5;
+	color = Color::White;
+	Game::Get().WriteToBuffer(showPosition, "Single Play Controls", color);
+	showPosition.y += 2;
+	Game::Get().WriteToBuffer(showPosition, "Move Left         : Left Arrow Key", color);
+	showPosition.y++;
+	Game::Get().WriteToBuffer(showPosition, "Move Right        : Right Arrow Key", color);
+	showPosition.y++;
+	Game::Get().WriteToBuffer(showPosition, "Soft Drop         : Down Arrow Key", color);
+	showPosition.y++;
+	Game::Get().WriteToBuffer(showPosition, "Rotate Clockwise  : Q, E", color);
+
 }
