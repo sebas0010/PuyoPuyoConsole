@@ -39,15 +39,24 @@ public:
 	// 뿌요 그리드를 탐색하며 같은 색 4개가 연결된 경우 터뜨리는 함수
 	int Explore();
 
+	// 뿌요의 하강 속도를 리턴하는 함수
+	float GetLandingSpeed();
+
+	// 뿌요의 하강 속도를 조정하는 함수
+	void SetLandingSpeed();
+
 	// 플레이어가 조작 가능한 공간의 좌표
 	int screenMinX = 6;
 	int screenMaxX = 35;
 	int screenMinY = 3;
-	int screenMaxY = 26;
+	int screenMaxY = 26; 
 
 private:
 	// 뿌요를 조작 중인지 판단하기 위한 변수
 	bool isPuyoLanding = false;
+
+	// 뿌요의 하강 속도
+	float puyoLandingSpeed = 0.8f;
 
 	// 뿌요 착륙 후를 처리중인지 판단하기 위한 변수
 	bool isProcessing = false;

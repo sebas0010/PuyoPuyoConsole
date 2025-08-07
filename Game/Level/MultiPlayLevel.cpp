@@ -73,7 +73,7 @@ void MultiPlayLevel::Tick(float deltaTime)
 		if(AllGravityFinished(ix))
 		{
 			isGravityProcessing[ix] = false;
-			attackDamage[ix] += Explore(ix);
+			curAttackDamage[ix] += Explore(ix);
 			// 상쇄로 인한 점수로 상대에게 방해뿌요 생성
 			int opponent = (ix + 1) % 2;
 			int tmp = std::min(attackDamage[ix], attackDamage[opponent]);
@@ -103,8 +103,8 @@ void MultiPlayLevel::DrawMap(Vector2 drawPosition)
 	drawPosition.y++;
 	Vector2 drawposition2(drawPosition.x + 31, drawPosition.y);
 
-	Vector2 endLine(drawPosition.x + 1, drawPosition.y + 3);
-	Game::Get().WriteToBuffer(endLine, "                               ", Color::BackGroundRedIntensity);
+	Vector2 endLine(drawPosition.x + 1, drawPosition.y - 1);
+	Game::Get().WriteToBuffer(endLine, "##############################", Color::RedIntensity);
 
 	for (int ix = 0; ix < 24; ++ix)
 	{
@@ -212,8 +212,10 @@ void MultiPlayLevel::SpawnPuyo(int player)
 		dynamic_cast<Game*>(&Game::Get())->MultiGameOver(gameOver);
 		return;
 	}
+	attackDamage[player] += curAttackDamage[player];
+	curAttackDamage[player] = 0;
 
-	Vector2 spawnPosition((screenMinX[player] + screenMaxX[player]) / 2 + 1, screenMinY[player] - 2);
+	Vector2 spawnPosition((screenMinX[player] + screenMaxX[player]) / 2 + 1, screenMinY[player] - 4);
 
 	MultiPlayPuyo* puyo = new MultiPlayPuyo(spawnPosition, nextPuyoCode[player][0], true, player);
 	spawnPosition.y += 2;
@@ -297,7 +299,7 @@ void MultiPlayLevel::Gravity(int player)
 {
 	for (int i = 0; i < 6; i++)
 	{
-		for (int j = 0; j < 12; j++)
+		for (int j = 0; j < 13; j++)
 		{
 			if (puyoGrid[player][i][j] == nullptr)
 			{
@@ -321,7 +323,7 @@ void MultiPlayLevel::Gravity(int player)
 	gameOver = -1;
 	for (int i = 0; i < 6; i++)
 	{
-		if (puyoGrid[player][i][11] != nullptr) gameOver = player;
+		if (puyoGrid[player][i][12] != nullptr) gameOver = player;
 	}
 }
 

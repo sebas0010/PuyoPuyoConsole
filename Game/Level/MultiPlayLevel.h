@@ -81,6 +81,9 @@ private:
 	// 상대에게 공격하는 대미지
 	int attackDamage[2] = { 0 };
 
+	// 현재 연쇄단계 대미지(모든 연쇄가 끝나면 attackDamage로 넘어감)
+	int curAttackDamage[2] = { 0 };
+
 	// 방해 뿌요 생성 단계
 	bool isDisturbProcessing[2] = { false };
 	

@@ -137,7 +137,8 @@ void SinglePlayLevel::DrawNextPuyo(Vector2 drawPosition)
 
 void SinglePlayLevel::SpawnPuyo()
 {
-	
+	SetLandingSpeed();
+
 	Vector2 spawnPosition((screenMinX + screenMaxX)/2 + 1, screenMinY-4);
 
 	Puyo* puyo = new Puyo(spawnPosition, nextPuyoCode1, true);
@@ -345,4 +346,23 @@ int SinglePlayLevel::Explore()
 
 	chainCount++;
 	return score; // 이번 Explore에서 얻은 점수
+}
+
+float SinglePlayLevel::GetLandingSpeed()
+{
+	return puyoLandingSpeed;
+}
+
+void SinglePlayLevel::SetLandingSpeed()
+{
+	int curLevel = gameScore / 500;
+	float initialLandingSpeed = 0.8f;
+
+	for (int i = 0; i < curLevel; i++)
+	{
+		initialLandingSpeed *= 0.9f;
+	}
+
+	if (initialLandingSpeed < 0.15f) puyoLandingSpeed = 0.15f;
+	else puyoLandingSpeed = initialLandingSpeed;
 }

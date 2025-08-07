@@ -39,6 +39,8 @@ void Puyo::BeginPlay()
 	{
 		canPuyoMoveInterface
 			= dynamic_cast<ICanPuyoMove*>(GetOwner());
+
+		landingSpeed = canPuyoMoveInterface->GetLandingSpeed();
 	}
 	timer.Reset();
 	timer.SetTargetTime(landingSpeed);
