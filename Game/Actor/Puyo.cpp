@@ -1,7 +1,7 @@
 #include "Puyo.h"
 #include "Game/Game.h"
 #include "Math/Vector2.h"
-#include "Interface/ICanPuyoMove.h"
+#include "Interface/IPuyoInteractWithSinglePlay.h"
 
 Puyo::Puyo(Vector2 spawnPosition, int code, bool isMain)
 	: code(code), isMain(isMain)
@@ -37,10 +37,11 @@ void Puyo::BeginPlay()
 	// 인터페이스 얻어오기.
 	if (GetOwner())
 	{
-		canPuyoMoveInterface
-			= dynamic_cast<ICanPuyoMove*>(GetOwner());
+		ownerLevelInterface
+			= dynamic_cast<IPuyoInteractWithSinglePlay*>(GetOwner());
 
-		landingSpeed = canPuyoMoveInterface->GetLandingSpeed();
+		landingSpeed = ownerLevelInterface->GetLandingSpeed();
+		screenMinY = ownerLevelInterface->GetScreenMinY();
 	}
 	timer.Reset();
 	timer.SetTargetTime(landingSpeed);
@@ -103,9 +104,9 @@ void Puyo::Tick(float deltaTime)
 
 	if (Input::Get().GetKeyDown(VK_LEFT))
 	{
-		if (canPuyoMoveInterface->CanPuyoMove(*this, Vector2(position.x - 5, position.y)))
+		if (ownerLevelInterface->CanPuyoMove(*this, Vector2(position.x - 5, position.y)))
 		{
-			if (sibling->canPuyoMoveInterface->CanPuyoMove(*sibling, Vector2(sibling->position.x - 5, sibling->position.y)))
+			if (sibling->ownerLevelInterface->CanPuyoMove(*sibling, Vector2(sibling->position.x - 5, sibling->position.y)))
 			{
 				SetPosition(Vector2(position.x - 5, position.y));
 				sibling->SetPosition(Vector2(sibling->position.x - 5, sibling->position.y));
@@ -114,9 +115,9 @@ void Puyo::Tick(float deltaTime)
 	}
 	else if (Input::Get().GetKeyDown(VK_RIGHT))
 	{
-		if (canPuyoMoveInterface->CanPuyoMove(*this, Vector2(position.x + 5, position.y)))
+		if (ownerLevelInterface->CanPuyoMove(*this, Vector2(position.x + 5, position.y)))
 		{
-			if (sibling->canPuyoMoveInterface->CanPuyoMove(*sibling, Vector2(sibling->position.x + 5, sibling->position.y)))
+			if (sibling->ownerLevelInterface->CanPuyoMove(*sibling, Vector2(sibling->position.x + 5, sibling->position.y)))
 			{
 				SetPosition(Vector2(position.x + 5, position.y));
 				sibling->SetPosition(Vector2(sibling->position.x + 5, sibling->position.y));
@@ -128,28 +129,28 @@ void Puyo::Tick(float deltaTime)
 		switch (subPuyoDirection)
 		{
 		case 0: // 서브 뿌요를 메인 뿌요의 오른쪽으로 이동
-			if (sibling->canPuyoMoveInterface->CanPuyoMove(*sibling, Vector2(position.x + 5, position.y)))
+			if (sibling->ownerLevelInterface->CanPuyoMove(*sibling, Vector2(position.x + 5, position.y)))
 			{
 				sibling->SetPosition(Vector2(position.x + 5, position.y));
 				subPuyoDirection = 3;
 			}
 			break;
 		case 1: // 서브 뿌요를 메인 뿌요의 아래로 이동
-			if (sibling->canPuyoMoveInterface->CanPuyoMove(*sibling, Vector2(position.x, position.y + 2)))
+			if (sibling->ownerLevelInterface->CanPuyoMove(*sibling, Vector2(position.x, position.y + 2)))
 			{
 				sibling->SetPosition(Vector2(position.x, position.y + 2));
 				subPuyoDirection = 0;
 			}
 			break;
 		case 2: // 서브 뿌요를 메인 뿌요의 왼쪽으로 이동
-			if (sibling->canPuyoMoveInterface->CanPuyoMove(*sibling, Vector2(position.x - 5, position.y)))
+			if (sibling->ownerLevelInterface->CanPuyoMove(*sibling, Vector2(position.x - 5, position.y)))
 			{
 				sibling->SetPosition(Vector2(position.x - 5, position.y));
 				subPuyoDirection = 1;
 			}
 			break;
 		case 3: // 서브 뿌요를 메인 뿌요의 위로 이동
-			if (sibling->canPuyoMoveInterface->CanPuyoMove(*sibling, Vector2(position.x, position.y - 2)))
+			if (sibling->ownerLevelInterface->CanPuyoMove(*sibling, Vector2(position.x, position.y - 2)))
 			{
 				sibling->SetPosition(Vector2(position.x, position.y - 2));
 				subPuyoDirection = 2;
@@ -162,28 +163,28 @@ void Puyo::Tick(float deltaTime)
 		switch (subPuyoDirection)
 		{
 		case 0: // 서브 뿌요를 메인 뿌요의 왼쪽으로 이동
-			if (sibling->canPuyoMoveInterface->CanPuyoMove(*sibling, Vector2(position.x - 5, position.y)))
+			if (sibling->ownerLevelInterface->CanPuyoMove(*sibling, Vector2(position.x - 5, position.y)))
 			{
 				sibling->SetPosition(Vector2(position.x - 5, position.y));
 				subPuyoDirection = 1;
 			}
 			break;
 		case 1: // 서브 뿌요를 메인 뿌요의 위로 이동
-			if (sibling->canPuyoMoveInterface->CanPuyoMove(*sibling, Vector2(position.x, position.y - 2)))
+			if (sibling->ownerLevelInterface->CanPuyoMove(*sibling, Vector2(position.x, position.y - 2)))
 			{
 				sibling->SetPosition(Vector2(position.x, position.y - 2));
 				subPuyoDirection = 2;
 			}
 			break;
 		case 2: // 서브 뿌요를 메인 뿌요의 오른쪽으로 이동
-			if (sibling->canPuyoMoveInterface->CanPuyoMove(*sibling, Vector2(position.x + 5, position.y)))
+			if (sibling->ownerLevelInterface->CanPuyoMove(*sibling, Vector2(position.x + 5, position.y)))
 			{
 				sibling->SetPosition(Vector2(position.x + 5, position.y));
 				subPuyoDirection = 3;
 			}
 			break;
 		case 3: // 서브 뿌요를 메인 뿌요의 아래로 이동
-			if (sibling->canPuyoMoveInterface->CanPuyoMove(*sibling, Vector2(position.x, position.y + 2)))
+			if (sibling->ownerLevelInterface->CanPuyoMove(*sibling, Vector2(position.x, position.y + 2)))
 			{
 				sibling->SetPosition(Vector2(position.x, position.y + 2));
 				subPuyoDirection = 0;
@@ -213,8 +214,8 @@ void Puyo::Tick(float deltaTime)
 	}
 
 	timer.Reset();
-	if (canPuyoMoveInterface->CanPuyoMove(*this, Vector2(position.x, position.y + 1))
-		&& sibling->canPuyoMoveInterface->CanPuyoMove(*sibling, Vector2(sibling->position.x, sibling->position.y + 1)))
+	if (ownerLevelInterface->CanPuyoMove(*this, Vector2(position.x, position.y + 1))
+		&& sibling->ownerLevelInterface->CanPuyoMove(*sibling, Vector2(sibling->position.x, sibling->position.y + 1)))
 	{
 		SetPosition(Vector2(position.x, position.y + 1));
 		sibling->SetPosition(Vector2(sibling->position.x, sibling->position.y + 1));
@@ -226,7 +227,7 @@ void Puyo::Tick(float deltaTime)
 		{
 			isControlling = false;
 			sibling->isControlling = false;
-			canPuyoMoveInterface->PuyoLanded(this, sibling);
+			ownerLevelInterface->PuyoLanded(this, sibling);
 		}
 		isLanded = true;
 	}
@@ -235,13 +236,13 @@ void Puyo::Tick(float deltaTime)
 void Puyo::Render()
 {
 	Vector2 curPosition = position;
-	if (curPosition.y >= 0)
+	if (curPosition.y >= screenMinY)
 	{
 		if (isDestroying) Game::Get().WriteToBuffer(curPosition, removingImage1, color);
 		else Game::Get().WriteToBuffer(curPosition, image1, color);
 	}
 	curPosition.y++;
-	if (curPosition.y >= 0)
+	if (curPosition.y >= screenMinY)
 	{
 		if (isDestroying) Game::Get().WriteToBuffer(curPosition, removingImage2, color);
 		else Game::Get().WriteToBuffer(curPosition, image2, color);

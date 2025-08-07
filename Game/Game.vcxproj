@@ -180,7 +180,7 @@
     <ClInclude Include="Actor\Puyo.h" />
     <ClInclude Include="Common\MenuItem.h" />
     <ClInclude Include="Game\Game.h" />
-    <ClInclude Include="Interface\ICanPuyoMove.h" />
+    <ClInclude Include="Interface\IPuyoInteractWithSinglePlay.h" />
     <ClInclude Include="Interface\IInteractPuyo.h" />
     <ClInclude Include="Level\GameOverLevel.h" />
     <ClInclude Include="Level\MainMenuLevel.h" />

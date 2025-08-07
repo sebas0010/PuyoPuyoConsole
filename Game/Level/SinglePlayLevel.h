@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Level/Level.h"
-#include "Interface/ICanPuyoMove.h"
+#include "Interface/IPuyoInteractWithSinglePlay.h"
 
 
-class SinglePlayLevel : public Level, public ICanPuyoMove
+class SinglePlayLevel : public Level, public IPuyoInteractWithSinglePlay
 {
 	RTTI_DECLARATIONS(SinglePlayLevel, Level)
 public:
@@ -44,6 +44,9 @@ public:
 
 	// 뿌요의 하강 속도를 조정하는 함수
 	void SetLandingSpeed();
+
+	// 뿌요가 screenMinY 의 정보를 받기 위한 함수
+	int GetScreenMinY() override;
 
 	// 플레이어가 조작 가능한 공간의 좌표
 	int screenMinX = 6;

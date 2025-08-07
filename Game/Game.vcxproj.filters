@@ -74,7 +74,7 @@
     <ClInclude Include="Actor\Puyo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\ICanPuyoMove.h">
+    <ClInclude Include="Interface\IPuyoInteractWithSinglePlay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Level\GameOverLevel.h">

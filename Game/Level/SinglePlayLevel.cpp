@@ -366,3 +366,8 @@ void SinglePlayLevel::SetLandingSpeed()
 	if (initialLandingSpeed < 0.15f) puyoLandingSpeed = 0.15f;
 	else puyoLandingSpeed = initialLandingSpeed;
 }
+
+int SinglePlayLevel::GetScreenMinY()
+{
+	return screenMinY;
+}

@@ -67,7 +67,7 @@ private:
 	float landingSpeedFast = 0.05f;
 
 	// Owner 레벨의 특정 함수를 사용하기 위한 인터페이스
-	class ICanPuyoMove* canPuyoMoveInterface = nullptr;
+	class IPuyoInteractWithSinglePlay* ownerLevelInterface = nullptr;
 
 	// 뿌요 쌍 파트너의 포인터
 	Puyo* sibling = nullptr;
@@ -86,4 +86,7 @@ private:
 
 	// 한 칸 이동하는데 걸리는 시간을 가지고 있는 타이머
 	Timer timer;
+
+	// 레벨의 screenMinY
+	int screenMinY = 0;
 };
