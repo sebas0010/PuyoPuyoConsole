@@ -347,6 +347,9 @@ int MultiPlayLevel::Explore(int player)
 	std::set<int> colorSet; // 색상 종류
 	std::vector<int> groupSizes; // 그룹 크기 저장
 
+	static const int dx[4] = { 1, -1, 0, 0 };
+	static const int dy[4] = { 0, 0, 1, -1 };
+
 	for (int i = 0; i < 6; i++)
 	{
 		for (int j = 0; j < 12; j++)
@@ -370,9 +373,6 @@ int MultiPlayLevel::Explore(int player)
 			{
 				Vector2 cur = q.front(); q.pop();
 				group.push_back(cur);
-
-				static const int dx[4] = { 1, -1, 0, 0 };
-				static const int dy[4] = { 0, 0, 1, -1 };
 
 				for (int dir = 0; dir < 4; dir++)
 				{
@@ -428,14 +428,35 @@ int MultiPlayLevel::Explore(int player)
 	// === 삭제 실행 ===
 	for (auto& pos : removeList)
 	{
-		puyoGrid[player][pos.x][pos.y]->WillDestroyed();
-		puyoGrid[player][pos.x][pos.y] = nullptr;
+		for (int dir = 0; dir < 4; ++dir)
+		{
+			int nx = pos.x + dx[dir];
+			int ny = pos.y + dy[dir];
+
+			// 경계 체크
+			if (nx < 0 || nx >= 6 || ny < 0 || ny >= 12)
+				continue;
+
+			// 주변이 방해뿌요(code == 0)면 제거
+			if (puyoGrid[player][nx][ny] != nullptr &&
+				puyoGrid[player][nx][ny]->GetCode() == 0)
+			{
+				puyoGrid[player][nx][ny]->WillDestroyed();
+				puyoGrid[player][nx][ny] = nullptr;
+			}
+		}
+
+		// 원래 그룹에 포함된 뿌요 제거
+		if (puyoGrid[player][pos.x][pos.y] != nullptr)
+		{
+			puyoGrid[player][pos.x][pos.y]->WillDestroyed();
+			puyoGrid[player][pos.x][pos.y] = nullptr;
+		}
 	}
 
 	isRemoving[player] = true;
 	removingTimer[player].Reset();
 	removingTimer[player].SetTargetTime(0.3f);
-
 
 	chainCount[player]++;
 	return score; // 이번 Explore에서 얻은 점수
