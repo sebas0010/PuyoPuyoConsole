@@ -10,5 +10,7 @@ enum class Color : int
 	Magneta = Blue | Red,
 	White = Red | Green | Blue,
 	Intensity = 8,
-	RedIntensity = Red | Intensity
+	RedIntensity = Red | Intensity,
+	BlueIntensity = Blue | Intensity,
+	GreenIntensity = Green | Intensity
 };

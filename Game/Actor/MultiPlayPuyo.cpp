@@ -232,7 +232,7 @@ void MultiPlayPuyo::ApplyGravity(int newY)
 {
 	isLanding = true;
 	landingTarget = Vector2(position.x, newY);
-	timer.SetTargetTime(landingSpeedFast);
+	timer.SetTargetTime(0.05f);
 }
 
 void MultiPlayPuyo::WillDestroyed()

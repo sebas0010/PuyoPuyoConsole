@@ -100,7 +100,7 @@ private:
 	float landingSpeed = 0.8f;
 
 	// 아래 방향키를 누르고 있는 경우 하강 속도 : 0.1초에 한칸
-	float landingSpeedFast = 0.05f;
+	float landingSpeedFast = 0.03f;
 
 	// 한 칸 이동하는데 걸리는 시간을 가지고 있는 타이머
 	Timer timer;

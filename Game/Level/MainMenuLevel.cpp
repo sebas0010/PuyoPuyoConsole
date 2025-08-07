@@ -72,16 +72,46 @@ void MainMenuLevel::Render()
 		showPosition.y++;
 	}
 
-	showPosition.y += 5;
-	color = Color::White;
+	showPosition.y += 3;
+	color = Color::BlueIntensity;
 	Game::Get().WriteToBuffer(showPosition, "Single Play Controls", color);
 	showPosition.y += 2;
-	Game::Get().WriteToBuffer(showPosition, "Move Left         : Left Arrow Key", color);
+	color = Color::White;
+	Game::Get().WriteToBuffer(showPosition, "Move Left     : Left Arrow Key", color);
 	showPosition.y++;
-	Game::Get().WriteToBuffer(showPosition, "Move Right        : Right Arrow Key", color);
+	Game::Get().WriteToBuffer(showPosition, "Move Right    : Right Arrow Key", color);
 	showPosition.y++;
-	Game::Get().WriteToBuffer(showPosition, "Soft Drop         : Down Arrow Key", color);
+	Game::Get().WriteToBuffer(showPosition, "Soft Drop     : Down Arrow Key", color);
 	showPosition.y++;
-	Game::Get().WriteToBuffer(showPosition, "Rotate Clockwise  : Q, E", color);
+	Game::Get().WriteToBuffer(showPosition, "Rotate        : Q, E", color);
 
+	showPosition.y += 3;
+	color = Color::BlueIntensity;
+	Game::Get().WriteToBuffer(showPosition, "Multi Play Controls", color);
+	showPosition.y += 2;
+	color = Color::GreenIntensity;
+	Game::Get().WriteToBuffer(showPosition, "Player 1 (Left)", color);
+	showPosition.y += 2;
+	color = Color::White;
+	Game::Get().WriteToBuffer(showPosition, "Move Left     : A", color);
+	showPosition.y++;
+	Game::Get().WriteToBuffer(showPosition, "Move Right    : D", color);
+	showPosition.y++;
+	Game::Get().WriteToBuffer(showPosition, "Soft Drop     : S", color);
+	showPosition.y++;
+	Game::Get().WriteToBuffer(showPosition, "Rotate        : Q, E", color);
+
+	showPosition.y -= 5;
+	showPosition.x += 30;
+	color = Color::GreenIntensity;
+	Game::Get().WriteToBuffer(showPosition, "Player 2 (Right)", color);
+	showPosition.y += 2;
+	color = Color::White;
+	Game::Get().WriteToBuffer(showPosition, "Move Left     : Left Arrow Key", color);
+	showPosition.y++;
+	Game::Get().WriteToBuffer(showPosition, "Move Right    : Right Arrow Key", color);
+	showPosition.y++;
+	Game::Get().WriteToBuffer(showPosition, "Soft Drop     : Down Arrow Key", color);
+	showPosition.y++;
+	Game::Get().WriteToBuffer(showPosition, "Rotate        : K, L", color);
 }

@@ -64,7 +64,7 @@ private:
 	float landingSpeed = 0.8f;
 
 	// 아래 방향키를 누르고 있는 경우 하강 속도 : 0.1초에 한칸
-	float landingSpeedFast = 0.05f;
+	float landingSpeedFast = 0.03f;
 
 	// Owner 레벨의 특정 함수를 사용하기 위한 인터페이스
 	class IPuyoInteractWithSinglePlay* ownerLevelInterface = nullptr;
