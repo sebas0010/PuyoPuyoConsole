@@ -27,7 +27,7 @@ void MultiPlayLevel::Tick(float deltaTime)
 	{
 		if (isPuyoLanding[ix] == false)
 		{
-			// 방해뿌요 처리 중이면
+			// 방해뿌요 처리 중
 			if (isDisturbProcessing[ix])
 			{
 				disturbTimer[ix].Tick(deltaTime);
@@ -44,10 +44,9 @@ void MultiPlayLevel::Tick(float deltaTime)
 			int disturbCount = attackDamage[(ix + 1) % 2] / 70;
 			if (disturbCount > 0)
 			{
-				// 방해뿌요 생성
 				SpawnDisturbPuyo(ix, disturbCount);
 				attackDamage[(ix + 1) % 2] %= 70; // 방해 점수 정산
-				// 타이머 시작
+				// 방해뿌요 떨어질 때 까지 대기
 				disturbTimer[ix].Reset();
 				disturbTimer[ix].SetTargetTime(1.0f);
 				isDisturbProcessing[ix] = true;

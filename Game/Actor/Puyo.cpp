@@ -233,11 +233,17 @@ void Puyo::Tick(float deltaTime)
 void Puyo::Render()
 {
 	Vector2 curPosition = position;
-	if(isDestroying) Game::Get().WriteToBuffer(curPosition, removingImage1, color);
-	else Game::Get().WriteToBuffer(curPosition, image1, color);
+	if (curPosition.y >= 0)
+	{
+		if (isDestroying) Game::Get().WriteToBuffer(curPosition, removingImage1, color);
+		else Game::Get().WriteToBuffer(curPosition, image1, color);
+	}
 	curPosition.y++;
-	if (isDestroying) Game::Get().WriteToBuffer(curPosition, removingImage2, color);
-	else Game::Get().WriteToBuffer(curPosition, image2, color);
+	if (curPosition.y >= 0)
+	{
+		if (isDestroying) Game::Get().WriteToBuffer(curPosition, removingImage2, color);
+		else Game::Get().WriteToBuffer(curPosition, image2, color);
+	}
 }
 
 void Puyo::ApplyGravity(int newY)

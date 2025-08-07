@@ -61,10 +61,8 @@ void SinglePlayLevel::DrawMap(Vector2 drawPosition)
 	Game::Get().WriteToBuffer(drawPosition, "################################", Color::White);
 	drawPosition.y++;
 	Vector2 drawposition2(drawPosition.x + 31, drawPosition.y);
-
-	Vector2 endLine(drawPosition.x + 1, drawPosition.y + 3);
-	Game::Get().WriteToBuffer(endLine, "                               ", Color::BackGroundRedIntensity);
-
+	Vector2 endLine(drawPosition.x + 1, drawPosition.y - 1);
+	Game::Get().WriteToBuffer(endLine, "##############################", Color::Red);
 	for (int ix = 0; ix < 24; ++ix)
 	{
 		Game::Get().WriteToBuffer(drawPosition, "#", Color::White);
@@ -140,7 +138,7 @@ void SinglePlayLevel::DrawNextPuyo(Vector2 drawPosition)
 void SinglePlayLevel::SpawnPuyo()
 {
 	
-	Vector2 spawnPosition((screenMinX + screenMaxX)/2 + 1, screenMinY);
+	Vector2 spawnPosition((screenMinX + screenMaxX)/2 + 1, screenMinY-4);
 
 	Puyo* puyo = new Puyo(spawnPosition, nextPuyoCode1, true);
 	spawnPosition.y += 2;
@@ -159,7 +157,7 @@ void SinglePlayLevel::SpawnPuyo()
 bool SinglePlayLevel::CanPuyoMove(const Puyo& puyo, const Vector2& newPosition)
 {
 	// 뿌요가 내려갈 위치가 스크린을 벗어나면 못움직인다고 리턴
-	if (newPosition.y < screenMinY || newPosition.y+1 > screenMaxY || newPosition.x < screenMinX || newPosition.x > screenMaxX)
+	if (newPosition.y+1 > screenMaxY || newPosition.x < screenMinX || newPosition.x > screenMaxX)
 	{
 		return false;
 	}
@@ -202,7 +200,7 @@ bool SinglePlayLevel::CanPuyoMove(const Puyo& puyo, const Vector2& newPosition)
 
 void SinglePlayLevel::PuyoLanded(Puyo* puyo1, Puyo* puyo2)
 {
-	if (puyo1->Position().y <= screenMinY + 3 || puyo2->Position().y <= screenMinY + 3)
+	if (puyo1->Position().y < screenMinY || puyo2->Position().y < screenMinY)
 	{
 		dynamic_cast<Game*>(&Game::Get())->GameOver(gameScore);
 		return;
