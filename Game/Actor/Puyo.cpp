@@ -253,7 +253,7 @@ void Puyo::ApplyGravity(int newY)
 {
 	gravityFlag = true;
 	targetPosition = Vector2(position.x, newY);
-	timer.SetTargetTime(0.05f);
+	timer.SetTargetTime(0.03f);
 }
 
 int Puyo::GetCode()

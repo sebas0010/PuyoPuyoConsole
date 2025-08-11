@@ -363,7 +363,7 @@ void SinglePlayLevel::SetLandingSpeed()
 		initialLandingSpeed *= 0.9f;
 	}
 
-	if (initialLandingSpeed < 0.15f) puyoLandingSpeed = 0.15f;
+	if (initialLandingSpeed < 0.1f) puyoLandingSpeed = 0.1f;
 	else puyoLandingSpeed = initialLandingSpeed;
 }
 

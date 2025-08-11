@@ -92,7 +92,7 @@ void MultiPlayLevel::Render()
 	DrawMap(Vector2(screenMinX[1] - 1, screenMinY[1] - 1));
 
 	DrawNextPuyo(Vector2(screenMaxX[0] + 4, screenMinY[0]), 0);
-	DrawNextPuyo(Vector2(screenMinX[1] - 10, screenMinY[1]), 1);
+	DrawNextPuyo(Vector2(screenMinX[1] - 8, screenMinY[1]), 1);
 
 	DrawDisturbGauge(Vector2(screenMinX[0], screenMinY[0] - 4), 0);
 	DrawDisturbGauge(Vector2(screenMinX[1], screenMinY[1] - 4), 1);
@@ -161,16 +161,25 @@ void MultiPlayLevel::DrawNextPuyo(Vector2 drawPosition, int player)
 void MultiPlayLevel::DrawDisturbGauge(Vector2 drawPosition, int player)
 {
 	int opponent = (player + 1) % 2;
-	int damage = attackDamage[opponent];
+	int damage = attackDamage[opponent] / 70;
 
 	Game::Get().WriteToBuffer(drawPosition, "Disturb Gauge", Color::White);
 	drawPosition.y++;
-
-	while (damage >= 70)
+	Color gaugeColor;
+	int tmp = 1;
+	while (tmp <= damage)
 	{
-		Game::Get().WriteToBuffer(drawPosition, "@@", Color::Yellow);
+		if (tmp > 36) gaugeColor = Color::Red;
+		else if (tmp > 24) gaugeColor = Color::RedIntensity;
+		else if (tmp > 12) gaugeColor = Color::Yellow;
+		else gaugeColor = Color::YellowIntensity;
+		Game::Get().WriteToBuffer(drawPosition, "@@", gaugeColor);
 		drawPosition.x += 2;
-		damage -= 70;
+		tmp++;
+		if (tmp % 12 == 1)
+		{
+			drawPosition.x -= 24;
+		}
 	}
 }
 
@@ -178,6 +187,8 @@ void MultiPlayLevel::SpawnDisturbPuyo(int player, int disturbPuyoCount)
 {
 	Vector2 spawnPosition(screenMinX[player], screenMinY[player] - 2);
 	std::vector<MultiPlayPuyo*> newDumy;
+	if (disturbPuyoCount > 72) disturbPuyoCount = 72;
+
 	while (disturbPuyoCount > 0)
 	{
 		newDumy.emplace_back(new MultiPlayPuyo(spawnPosition, 0, false, player));
@@ -193,7 +204,7 @@ void MultiPlayLevel::SpawnDisturbPuyo(int player, int disturbPuyoCount)
 	int tmp = 0;
 	while (!newDumy.empty())
 	{
-		for (int i = 0; i < 12; i++) {
+		for (int i = 0; i < 24; i++) {
 			if (puyoGrid[player][tmp][i] == nullptr)
 			{
 				puyoGrid[player][tmp][i] = newDumy.front();
@@ -205,6 +216,10 @@ void MultiPlayLevel::SpawnDisturbPuyo(int player, int disturbPuyoCount)
 		tmp++;
 		if (tmp > 5) tmp = 0;
 	}
+	for (int i = 0; i < 6; i++) {
+		if (puyoGrid[player][i][12] != nullptr) gameOver = player;
+	}
+
 }
 
 void MultiPlayLevel::SpawnPuyo(int player)

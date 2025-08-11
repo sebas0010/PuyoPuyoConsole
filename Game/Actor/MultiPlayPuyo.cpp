@@ -16,8 +16,8 @@ MultiPlayPuyo::MultiPlayPuyo(Vector2 spawnPosition, int code, bool isMain, int p
 	{
 		isControlling = false;
 		isLanding = false;
-		landingSpeed = 0.05f;
-		landingSpeedFast = 0.05f;
+		landingSpeed = 0.03f;
+		landingSpeedFast = 0.03f;
 	}
 
 	switch (player)
@@ -223,16 +223,24 @@ void MultiPlayPuyo::Tick(float deltaTime)
 void MultiPlayPuyo::Render()
 {
 	Vector2 curPosition = position;
-	if(curPosition.y >= screenMinY) Game::Get().WriteToBuffer(curPosition, image1, color);
+	if (curPosition.y >= screenMinY)
+	{
+		if (isDestroying) Game::Get().WriteToBuffer(curPosition, removingImage1, color);
+		else Game::Get().WriteToBuffer(curPosition, image1, color);
+	}
 	curPosition.y++;
-	if (curPosition.y >= screenMinY) Game::Get().WriteToBuffer(curPosition, image2, color);
+	if (curPosition.y >= screenMinY)
+	{
+		if (isDestroying) Game::Get().WriteToBuffer(curPosition, removingImage2, color);
+		else Game::Get().WriteToBuffer(curPosition, image2, color);
+	}
 }
 
 void MultiPlayPuyo::ApplyGravity(int newY)
 {
 	isLanding = true;
 	landingTarget = Vector2(position.x, newY);
-	timer.SetTargetTime(0.05f);
+	timer.SetTargetTime(0.03f);
 }
 
 void MultiPlayPuyo::WillDestroyed()

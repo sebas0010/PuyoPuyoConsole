@@ -12,5 +12,6 @@ enum class Color : int
 	Intensity = 8,
 	RedIntensity = Red | Intensity,
 	BlueIntensity = Blue | Intensity,
-	GreenIntensity = Green | Intensity
+	GreenIntensity = Green | Intensity,
+	YellowIntensity = Yellow | Intensity
 };
